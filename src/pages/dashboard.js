@@ -3,7 +3,8 @@ import { signOut } from "firebase/auth";
 import { useAddTransaction } from "../hooks/useAddTransaction"
 import { useGetTransactions } from "../hooks/useGetTransactions";
 import { useGetUserInfo } from "../hooks/useGetUserInfo";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import { User } from 'react-feather'
 
 import { auth } from "../config/firebase-config";
 
@@ -12,7 +13,7 @@ import { auth } from "../config/firebase-config";
 export default function Dashboard(){
     const { addTransaction } = useAddTransaction();
     const { transactions,transactionTotals } = useGetTransactions();
-    const {name} = useGetUserInfo();
+    const {name,isAuth} = useGetUserInfo();
     const navigate = useNavigate();
 
   const [description, setDescription] = useState("");
@@ -41,11 +42,21 @@ export default function Dashboard(){
       console.error(err);
     }
   };
+  if (!isAuth) {
+    return <Navigate to="/" />;
+  }
     return(
         <>
         <h1>Hello, {name}</h1>
 
        <div className="expense-tracker">
+       <div className="profile">
+            {" "}
+            <User size={80} color={"#494368"}/>
+            <button className="bg-transparent hover:bg-purple-600 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-600 hover:border-transparent rounded" onClick={signUserOut}>
+              Sign Out
+            </button>
+          </div>
         <div className="container">
           <h1><b>Expense Tracker</b></h1>
           <div className="balance">
@@ -80,6 +91,7 @@ export default function Dashboard(){
             />
             <div>
             <input
+              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
               type="radio"
               id="expense"
               value="expense"
@@ -90,6 +102,7 @@ export default function Dashboard(){
             />
             <label htmlFor="expense"> Expense</label>
             <input
+            className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
               type="radio"
               id="income"
               value="income"

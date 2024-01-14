@@ -1,5 +1,5 @@
 import { useToast } from "./ToastService";
-import { AlertCircle, LogIn, UserCheck, Zap } from 'react-feather'
+import { AlertCircle, LogIn, UserCheck, Zap} from 'react-feather'
 
 const toast=useToast();
 

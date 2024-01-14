@@ -1,9 +1,10 @@
 import React from 'react';
 import { auth,provider } from '../../config/firebase-config';
 import { signInWithPopup } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from "react-router-dom";
 import { useToast } from '../Toast/ToastService';
-import { AlertCircle, LogIn, UserCheck, Zap } from 'react-feather'
+import { UserCheck} from 'react-feather'
+import { useGetUserInfo } from '../../hooks/useGetUserInfo';
 
 
 
@@ -24,6 +25,7 @@ const handleLogin = () => {
     )
   }
   const navigate=useNavigate();
+  const { isAuth } = useGetUserInfo();
     const signWithGoogle = async () => {
       const results=await signInWithPopup(auth,provider);
       console.log(results);
@@ -42,6 +44,9 @@ const handleLogin = () => {
 
 
     };
+    if (isAuth) {
+      return <Navigate to="/dashboard" />;
+    }
   return (
     <div className="group relative w-full flex justify-center py-4 ">
       <button onClick={signWithGoogle}
