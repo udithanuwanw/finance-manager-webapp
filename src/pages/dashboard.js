@@ -7,6 +7,9 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { User } from 'react-feather'
 
 import { auth } from "../config/firebase-config";
+import Pychart from "../components/pychart";
+import ExpenseChart from "../components/ExpenseChart";
+
 
 
 
@@ -115,6 +118,11 @@ export default function Dashboard(){
             <button className="bg-transparent hover:bg-purple-600 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-600 hover:border-transparent rounded" type="submit"> Add Transaction</button>
           </form>
         </div>
+        </div>
+
+        <div>
+
+        <ExpenseChart />
         </div>
 
         <div className="transactions">
