@@ -1,159 +1,96 @@
-import { useState } from "react";
-import { signOut } from "firebase/auth";
-import { useAddTransaction } from "../hooks/useAddTransaction"
-import { useGetTransactions } from "../hooks/useGetTransactions";
-import { useGetUserInfo } from "../hooks/useGetUserInfo";
-import { useNavigate, Navigate } from "react-router-dom";
-import { User } from 'react-feather'
+// Dashboard.js
 
-import { auth } from "../config/firebase-config";
-import Pychart from "../components/pychart";
-import ExpenseChart from "../components/ExpenseChart";
+import React from 'react';
+import Layout from '../components/Layout';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWallet, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, BsFillBellFill } from 'react-icons/bs';
+import { useGetTransactions } from '../hooks/useGetTransactions';
+import ExpenseChart from '../components/ExpenseChart';
+import IncomeExpenseLineGraph from '../components/IncomeExpenseLineGraph';
+import moment from 'moment';
+import _ from 'lodash';
 
-
-
-
-export default function Dashboard(){
-    const { addTransaction } = useAddTransaction();
-    const { transactions,transactionTotals } = useGetTransactions();
-    const {name,isAuth} = useGetUserInfo();
-    const navigate = useNavigate();
-
-  const [description, setDescription] = useState("");
-  const [transactionAmount, setTransactionAmount] = useState(0);
-  const [transactionType, setTransactionType] = useState("expense");
+const Dashboard = () => {
+  const { transactions, transactionTotals } = useGetTransactions();
   const { balance, income, expenses } = transactionTotals;
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    addTransaction({
-      description,
-      transactionAmount,
-      transactionType,
-    });
+  return (
+    <Layout>
+      <div className='container mx-auto p-6'>
+        <div className='mb-8'>
+          <h1 className='text-3xl font-semibold text-gray-800'>DASHBOARD</h1>
+        </div>
 
-    setDescription("");
-    setTransactionAmount("");
-  };
-
-  const signUserOut = async () => {
-    try {
-      await signOut(auth);
-      localStorage.clear();
-      navigate("/");
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  if (!isAuth) {
-    return <Navigate to="/" />;
-  }
-    return(
-        <>
-        <h1>Hello, {name}</h1>
-
-       <div className="expense-tracker">
-       <div className="profile">
-            {" "}
-            <User size={80} color={"#494368"}/>
-            <button className="bg-transparent hover:bg-purple-600 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-600 hover:border-transparent rounded" onClick={signUserOut}>
-              Sign Out
-            </button>
-          </div>
-        <div className="container">
-          <h1><b>Expense Tracker</b></h1>
-          <div className="balance">
-            <h3> Your Balance</h3>
-            {balance >= 0 ? <h2> ${balance}</h2> : <h2> -${Math.abs(balance)}</h2>}
-          </div>
-          <div className="summary">
-            <div className="income">
-              <h4> Income</h4>
-              <p>${income}</p>
-            </div>
-            <div className="expenses">
-              <h4> Expenses</h4>
-              <p>${expenses}</p>
+        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
+          <div className='bg-cyan-600 rounded-lg p-6 text-white'>
+            <h3 className='text-lg font-semibold mb-4'>BALANCE</h3>
+            <div className='flex items-center'>
+              <FontAwesomeIcon icon={faWallet} size='2x' />
+              <h1 className='text-2xl ml-2'>${balance}</h1>
             </div>
           </div>
-          <form className="add-transaction" onSubmit={onSubmit}>
-            <input
-              type="text"
-              placeholder="Description"
-              value={description}
-              required
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Amount"
-              value={transactionAmount}
-              required
-              onChange={(e) => setTransactionAmount(e.target.value)}
-              
-            />
-            <div>
-            <input
-              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              type="radio"
-              id="expense"
-              value="expense"
-              checked={transactionType === "expense"}
-              onChange={(e) => setTransactionType(e.target.value)}
-
-              
-            />
-            <label htmlFor="expense"> Expense</label>
-            <input
-            className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              type="radio"
-              id="income"
-              value="income"
-              checked={transactionType === "income"}
-              onChange={(e) => setTransactionType(e.target.value)}
-            />
-            <label htmlFor="income"> Income</label>
+          <div className='bg-teal-500 rounded-lg p-6 text-white'>
+            <h3 className='text-lg font-semibold mb-4'>INCOME</h3>
+            <div className='flex items-center'>
+              <FontAwesomeIcon icon={faArrowUp} size='2x' />
+              <h1 className='text-2xl ml-2'>${income}</h1>
             </div>
-
-            <button className="bg-transparent hover:bg-purple-600 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-600 hover:border-transparent rounded" type="submit"> Add Transaction</button>
-          </form>
+          </div>
+          <div className='bg-pink-500 rounded-lg p-6 text-white'>
+            <h3 className='text-lg font-semibold mb-4'>EXPENSE</h3>
+            <div className='flex items-center'>
+              <FontAwesomeIcon icon={faArrowDown} size='2x' />
+              <h1 className='text-2xl ml-2'>${expenses}</h1>
+            </div>
+          </div>
         </div>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-8'>
+          <div className='bg-white rounded-lg p-6'>
+            <h2 className='text-xl font-semibold mb-4'>Expense Chart</h2>
+            <ExpenseChart />
+          </div>
+          <div className='bg-white rounded-lg p-6'>
+            <h2 className='text-xl font-semibold mb-4'>Income vs Expense</h2>
+            <IncomeExpenseLineGraph />
+          </div>
         </div>
 
-        <div>
+        <div className='mt-8'>
+          <h2 className='text-xl font-semibold mb-4'>Recent Transactions</h2>
+          <div className="flex items-center justify-center h-screen">
+  <table className="min-w-full bg-white border border-gray-300 shadow-lg rounded-md overflow-hidden">
+    <thead className="bg-gray-200 bg-gray-50 dark:bg-gray-700">
+      <tr>
+        <th className="py-3 px-4 text-left">DATE</th>
+        <th className="py-3 px-4 text-left">CATEGORY</th>
+        <th className="py-3 px-4 text-left">AMOUNT</th>
+        <th className="py-3 px-4 text-center">TRANSACTION TYPE</th>
+      </tr>
+    </thead>
+    <tbody className="text-gray-700">
+      {transactions.map((transaction, index) => (
+        <tr key={index} className="hover:bg-gray-100 transition-all  border-b  border-gray-300">
+          <td className="py-3 px-4 font-medium">{moment(transaction.createdAt * 1000).format('DD MMM')}</td>
+          <td className="py-3 px-4 ">{transaction.description}</td>
+          
+          <td className='py-3 px-4'>
+            ${transaction.transactionAmount}
+          </td>
+          <td className={`py-3 px-4 text-center ${transaction.transactionType === 'expense' ? 'text-red-500' : 'text-green-500'}`}>
+            {_.capitalize(transaction.transactionType)}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 
-        <ExpenseChart />
         </div>
+      </div>
+    </Layout>
+  );
+};
 
-        <div className="transactions">
-            <h3>Transactions</h3>
-
-            <ul>
-          {transactions.map((transaction) => {
-            const { description, transactionAmount, transactionType } =
-              transaction;
-            return (
-              <li>
-                <h4> {description} </h4>
-                <p>
-                  ${transactionAmount} •{" "}
-                  <label
-                    style={{
-                      color: transactionType === "expense" ? "red" : "green",
-                    }}
-                  >
-                    {" "}
-                    {transactionType}{" "}
-                  </label>
-                </p>
-              </li>
-            );
-          })}
-        </ul>    
-
-        </div>
-    
-            
-        </>
-    )
-}
+export default Dashboard;

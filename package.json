@@ -5,6 +5,10 @@
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "@mui/material": "^5.15.4",
@@ -15,12 +19,17 @@
     "chart.js": "^4.4.1",
     "chartjs-plugin-datalabels": "^2.2.0",
     "firebase": "^10.7.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
+    "react-datepicker": "^5.0.0",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
+    "react-icons": "^5.0.1",
     "react-router-dom": "^6.21.2",
     "react-scripts": "5.0.1",
+    "styled-components": "^6.1.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -1,4 +1,5 @@
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp,Timestamp } from "firebase/firestore";
+
 import { useGetUserInfo } from "./useGetUserInfo";
 import { db } from "../config/firebase-config";
 
@@ -9,13 +10,15 @@ export const useAddTransaction = () => {
     description,
     transactionAmount,
     transactionType,
+    createdAt
   }) => {
+    const timestamp = createdAt instanceof Date ? Timestamp.fromDate(createdAt) : serverTimestamp();
     await addDoc(transactionCollectionRef, {
       userID,
       description,
       transactionAmount,
       transactionType,
-      createdAt: serverTimestamp(),
+      createdAt: timestamp,
     });
   };
   return { addTransaction };

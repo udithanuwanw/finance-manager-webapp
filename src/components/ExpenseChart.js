@@ -1,6 +1,6 @@
 // ExpenseChart.js
 import React from "react";
-import { Pie } from "react-chartjs-2";
+import { Pie ,Doughnut} from "react-chartjs-2";
 import { useGetExpenses } from "../hooks/useGetExpenses";
 
 const ExpenseChart = () => {
@@ -21,12 +21,30 @@ const ExpenseChart = () => {
       },
     ],
   };
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Expense by Category',
+        font: {
+          size: 20,
+        },
+      },
+    }
+  };
 
   return (
-    <div>
-      <h2>Expense Chart</h2>
-      <p>Total Expenses: ${totalExpenses.toFixed(2)}</p>
-      <Pie data={chartData} />
+    <div >
+
+      <div style={{width: '100%', height: '100%', marginTop:"5px", paddingBottom:"10%",paddingLeft:"10%",paddingRight:"10%",background:"#FFFFFF",border:"2px solid #FFFFFF",boxShadow:"0px 1px 15px rgba(0, 0, 0, 0.06)",borderRadius:"20px"}}>
+      <h1>sdsa</h1>
+      <Doughnut data={chartData} options={chartOptions}/>
+      </div>
+      
+  
+
     </div>
   );
 };
