@@ -20,8 +20,9 @@ export const useGetTransactions = () => {
       const queryTransactions = query(
         transactionCollectionRef,
         where("userID", "==", userID),
-        orderBy("createdAt")
+        orderBy("date","desc")
       );
+      console.log(queryTransactions);
 
       unsubscribe = onSnapshot(queryTransactions, (snapshot) => {
         let docs = [];
@@ -42,6 +43,8 @@ export const useGetTransactions = () => {
 
           console.log(totalExpenses, totalIncome);
         });
+
+        console.log(docs);
 
         setTransactions(docs);
 

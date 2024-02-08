@@ -13,8 +13,8 @@ export const useAddBudget = () => {
       await addDoc(budgetCollectionRef, {
         userID,
         category,
-        amount: parseFloat(amount),
-        createdAt: serverTimestamp(),
+        transactionAmount: parseFloat(amount),
+        date: serverTimestamp(),
       });
 
       console.log('Budget added successfully!');

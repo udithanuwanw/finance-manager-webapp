@@ -1,11 +1,10 @@
-// useGetIncome.js
 import { useEffect, useState } from "react";
 import { query, collection, where, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
 
-export const useGetIncome = () => {
-  const [incomes, setIncomes] = useState([]);
+export const useGetIncomeFull = () => {
+  const [incomes, setIncome] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
 
   const incomeCollectionRef = collection(db, "transactions");
@@ -20,36 +19,25 @@ export const useGetIncome = () => {
 
       try {
         const queryIncome = query(
-          incomeCollectionRef,
+            incomeCollectionRef,
           where("userID", "==", userID),
           where("transactionType", "==", "income"),
           orderBy("date")
         );
 
         const unsubscribe = onSnapshot(queryIncome, (snapshot) => {
-          let incomeMap = new Map(); // Using Map to aggregate income by category name
+          let incomeList = [];
           let totalIncomeAmount = 0;
 
           snapshot.forEach((doc) => {
             const data = doc.data();
             const id = doc.id;
 
-            // Accessing category name from the selectedCategory object
-            const categoryName = data.selectedCategory.name;
-            const amount = Number(data.transactionAmount);
-            totalIncomeAmount += amount;
-
-            if (incomeMap.has(categoryName)) {
-              incomeMap.set(categoryName, incomeMap.get(categoryName) + amount);
-            } else {
-              incomeMap.set(categoryName, amount);
-            }
+            incomeList.push({ ...data, id });
+            totalIncomeAmount += Number(data.transactionAmount);
           });
 
-          // Convert aggregated data into an array of objects
-          const incomeList = Array.from(incomeMap, ([name, amount]) => ({ name, amount }));
-
-          setIncomes(incomeList);
+          setIncome(incomeList);
           setTotalIncome(totalIncomeAmount);
         });
 

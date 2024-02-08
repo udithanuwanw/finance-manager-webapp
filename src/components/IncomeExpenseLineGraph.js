@@ -3,8 +3,8 @@ import { Chart as ChartJs, CategoryScale, LinearScale, PointElement, LineElement
 import { Line } from 'react-chartjs-2';
 import styled from 'styled-components';
 import moment from 'moment';
-import { useGetIncome } from '../hooks/useGetIncomes';
-import { useGetExpenses } from '../hooks/useGetExpenses';
+import { useGetExpensesFull } from '../hooks/useGetExpensesFull';
+import { useGetIncomeFull } from '../hooks/useGetIncomesFull';
 import { useGetTransactions } from '../hooks/useGetTransactions';
 
 ChartJs.register(
@@ -19,8 +19,8 @@ ChartJs.register(
 );
 
 function IncomeExpenseLineGraph() {
-    const { incomes } = useGetIncome();
-    const { expenses } = useGetExpenses();
+    const { incomes } = useGetIncomeFull();
+    const { expenses } = useGetExpensesFull();
     const { transactions } = useGetTransactions();
     const [chartData, setChartData] = useState(getInitialChartData());
 
@@ -54,32 +54,61 @@ function IncomeExpenseLineGraph() {
     }
 
     function getUpdatedChartData() {
+        const dateAmountMap = {};
+    
+        // Aggregate income amounts by date
+        incomes.forEach((income) => {
+            const dateKey = moment(income.date.seconds * 1000).format('DD MMM');
+            if (!dateAmountMap[dateKey]) {
+                dateAmountMap[dateKey] = { income: 0, expense: 0 };
+            }
+            dateAmountMap[dateKey].income += Number(income.transactionAmount);
+        });
+    
+        // Aggregate expense amounts by date
+        expenses.forEach((expense) => {
+            const dateKey = moment(expense.date.seconds * 1000).format('DD MMM');
+            if (!dateAmountMap[dateKey]) {
+                dateAmountMap[dateKey] = { income: 0, expense: 0 };
+            }
+            dateAmountMap[dateKey].expense += Number(expense.transactionAmount);
+        });
+    
+        const labels = Object.keys(dateAmountMap).sort((a, b) => moment(a, 'DD MMM').toDate() - moment(b, 'DD MMM').toDate());
+        const incomeData = [];
+        const expenseData = [];
+    
+        // Populate income and expense data arrays
+        labels.forEach((label) => {
+            incomeData.push(dateAmountMap[label].income);
+            expenseData.push(dateAmountMap[label].expense);
+        });
+    
         return {
-            labels: transactions.map((transaction) => {
-                const { createdAt } = transaction;
-                const createdAtSeconds = createdAt ? createdAt.seconds : null;
-                return createdAtSeconds ? moment(createdAtSeconds * 1000).format('DD MMM') : null;
-            }),
+            labels: labels,
             datasets: [
                 {
                     label: 'Income',
-                    data: incomes.map((income) => income.transactionAmount),
-                    backgroundColor: 'rgba(75,192,192,0.2)',
-                    borderColor: 'rgba(75,192,192,1)',
+                    data: incomeData,
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                    borderColor: 'rgba(40, 167, 69, 1)',
                     borderWidth: 2,
                     tension: 0.2,
                 },
                 {
                     label: 'Expenses',
-                    data: expenses.map((expense) => expense.transactionAmount),
-                    backgroundColor: 'rgba(255,99,132,0.2)',
-                    borderColor: 'rgba(255,99,132,1)',
+                    data: expenseData,
+                    backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                    borderColor: 'rgba(220, 53, 69, 1)',
                     borderWidth: 2,
                     tension: 0.2,
                 },
             ],
         };
     }
+    
+    
+    
 
     const chartOptions = {
         plugins: {

@@ -7,19 +7,28 @@ export const useAddTransaction = () => {
   const transactionCollectionRef = collection(db, "transactions");
   const { userID } = useGetUserInfo();
   const addTransaction = async ({
-    description,
     transactionAmount,
     transactionType,
-    createdAt
+    selectedCategory,
+    note,
+    date
   }) => {
-    const timestamp = createdAt instanceof Date ? Timestamp.fromDate(createdAt) : serverTimestamp();
+    const timestamp = date instanceof Date ? Timestamp.fromDate(date) : serverTimestamp();
+
     await addDoc(transactionCollectionRef, {
       userID,
-      description,
       transactionAmount,
       transactionType,
-      createdAt: timestamp,
+      selectedCategory,
+      note,
+      date: timestamp,
     });
   };
   return { addTransaction };
 };
+
+//date
+//category
+//amount
+//type
+//note

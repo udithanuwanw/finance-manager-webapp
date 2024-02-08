@@ -7,10 +7,10 @@ const IncomeChart = () => {
   const { incomes, totalIncome } = useGetIncome();
 
   const chartData = {
-    labels: incomes.map((income) => income.description),
+    labels: incomes.map((income) => income.name),
     datasets: [
       {
-        data: incomes.map((income) => Number(income.transactionAmount)),
+        data: incomes.map((income) => income.amount),
         backgroundColor: [
           "rgba(255, 99, 132, 0.7)",
           "rgba(255, 159, 64, 0.7)",

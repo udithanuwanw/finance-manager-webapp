@@ -4,17 +4,40 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import categories from './categories';
+import { useAddTransaction } from '../../hooks/useAddTransaction';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 const TransactionForm = ({ onClose }) => {
+  const { addTransaction } = useAddTransaction();
   const [date, setDate] = useState(new Date());
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [amount, setAmount] = useState('');
+  const [transactionAmount, setAmount] = useState('');
   const [note, setNote] = useState('');
 
-  const handleSubmit = () => {
-    // Handle form submission here...
+  const handleSubmit = (e) => {
+    // Handle form submission here..
+    let transactionType;
+
+    e.preventDefault();
+    console.log(selectedCategory.name);
+    
+    if(selectedCategory.name=='Income'){
+
+      transactionType="income";
+
+    }
+    else{
+
+      transactionType="expense";
+    }
+    addTransaction({
+      transactionAmount,
+      transactionType,
+      selectedCategory,
+      note,
+      date: date || new Date(),
+    });
 
     // Clear form
     setDate(new Date());
@@ -71,7 +94,7 @@ const TransactionForm = ({ onClose }) => {
         </label>
         <input
           type="number"
-          value={amount}
+          value={transactionAmount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Amount"
           className="p-2 border rounded-md w-full"

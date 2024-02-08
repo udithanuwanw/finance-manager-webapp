@@ -20,6 +20,7 @@ const TransactionPage = () => {
 
   const { transactions } = useGetTransactions();
 
+
   const indexOfLastTransaction = currentPage * transactionsPerPage;
   const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
   const currentTransactions = transactions.slice(indexOfFirstTransaction, indexOfLastTransaction);

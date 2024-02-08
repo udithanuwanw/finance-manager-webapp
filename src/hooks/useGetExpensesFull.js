@@ -1,10 +1,9 @@
-// useGetExpenses.js
 import { useEffect, useState } from "react";
 import { query, collection, where, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
 
-export const useGetExpenses = () => {
+export const useGetExpensesFull = () => {
   const [expenses, setExpenses] = useState([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
 
@@ -27,28 +26,16 @@ export const useGetExpenses = () => {
         );
 
         const unsubscribe = onSnapshot(queryExpenses, (snapshot) => {
-          let expenseMap = new Map(); // Using Map to aggregate expenses by category name
+          let expenseList = [];
           let totalExpensesAmount = 0;
 
           snapshot.forEach((doc) => {
             const data = doc.data();
             const id = doc.id;
 
-            // Accessing category name from the selectedCategory object
-            const categoryName = data.selectedCategory.name;
-            const amount = Number(data.transactionAmount);
-            totalExpensesAmount += amount;
-
-            if (expenseMap.has(categoryName)) {
-              expenseMap.set(categoryName, expenseMap.get(categoryName) + amount);
-            } else {
-              expenseMap.set(categoryName, amount);
-            }
+            expenseList.push({ ...data, id });
+            totalExpensesAmount += Number(data.transactionAmount);
           });
-
-          // Convert aggregated data into an array of objects
-          const expenseList = Array.from(expenseMap, ([name, amount]) => ({ name, amount }));
-          console.log(expenseList);
 
           setExpenses(expenseList);
           setTotalExpenses(totalExpensesAmount);
