@@ -1,12 +1,5 @@
 import Layout from '../components/Layout';
-import { auth } from "../config/firebase-config";
-import ExpenseChart from "../components/ExpenseChart";
-import IncomeChart from "../components/IncomeChart";
-import DatePicker from "react-datepicker";
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { db } from '../config/firebase-config';
 import TransactionList from '../components/Transactions/TransactionList';
 import TransactionForm from '../components/Transactions/TransactionForm';
 import "react-datepicker/dist/react-datepicker.css";
