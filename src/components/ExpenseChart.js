@@ -1,21 +1,25 @@
 // ExpenseChart.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { useGetExpenses } from "../hooks/useGetExpenses";
 
 const ExpenseChart = () => {
-  const { expenses, totalExpenses } = useGetExpenses();
+  const { expenses, totalExpenses, getExpensesByDateRange } = useGetExpenses();
+  const [selectedDateRange, setSelectedDateRange] = useState("lastMonth");
 
-  // Filter out the expenses that are not income
-  console.log(expenses);
-  const filteredExpenses = expenses.filter(expense => expense.name !== 'Income');
-  console.log(filteredExpenses);
+  useEffect(() => {
+    getExpensesByDateRange(selectedDateRange);
+  }, [selectedDateRange]);
+
+  const handleDateRangeChange = (event) => {
+    setSelectedDateRange(event.target.value);
+  };
 
   const chartData = {
-    labels: filteredExpenses.map((expense) => expense.name),
+    labels: expenses.map((expense) => expense.name),
     datasets: [
       {
-        data: filteredExpenses.map((expense) => expense.amount),
+        data: expenses.map((expense) => expense.amount),
         backgroundColor: [
           "rgba(0, 123, 255, 0.7)", // Blue
           "rgba(102, 16, 242, 0.7)", // Purple
@@ -35,6 +39,7 @@ const ExpenseChart = () => {
       },
     ],
   };
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: true,
@@ -51,8 +56,16 @@ const ExpenseChart = () => {
 
   return (
     <div>
+      <div className="text-gray-800">
+        <select value={selectedDateRange} onChange={handleDateRangeChange}>
+          <option value="lastMonth">Last Month</option>
+          <option value="lastTwoMonths">Last Two Months</option>
+          <option value="lastThreeMonths">Last Three Months</option>
+          <option value="lastSixMonths">Last Six Months</option>
+          <option value="lastYear">Last Year</option>
+        </select>
+      </div>
       <div style={{ width: '100%', height: '100%', marginTop: "5px", paddingBottom: "10%", paddingLeft: "10%", paddingRight: "10%", background: "#FFFFFF", border: "2px solid #FFFFFF", boxShadow: "0px 1px 15px rgba(0, 0, 0, 0.06)", borderRadius: "20px" }}>
-        <h1>sdsa</h1>
         <Doughnut data={chartData} options={chartOptions} />
       </div>
     </div>

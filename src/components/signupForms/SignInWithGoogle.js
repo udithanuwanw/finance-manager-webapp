@@ -15,7 +15,7 @@ const GoogleLoginButton = () => {
 
 const handleLogin = () => {
     toast.open(
-      <div className='flex gap-2 bg-lime-200 text-lime-700 p-4 rounded-lg shadow-lg'>
+      <div className='flex gap-2 bg-green-400 text-green-800 p-4 rounded-lg shadow-lg'>
         <UserCheck size={40} />
         <div>
           <h3 className='font-bold'>Authenticated</h3>
@@ -32,7 +32,8 @@ const handleLogin = () => {
       const authInfo={
         userID:results.user.uid,
         name:results.user.displayName,
-        isAuth:true
+        isAuth:true,
+        provider:'google.com'
       }
       localStorage.setItem('auth',JSON.stringify(authInfo));
       handleLogin();

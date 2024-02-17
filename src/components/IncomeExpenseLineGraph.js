@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { useGetExpensesFull } from '../hooks/useGetExpensesFull';
 import { useGetIncomeFull } from '../hooks/useGetIncomesFull';
-import { useGetTransactions } from '../hooks/useGetTransactions';
+import { useGetCurrency } from '../hooks/useGetCurrency';
+
 
 ChartJs.register(
     CategoryScale,
@@ -19,15 +20,22 @@ ChartJs.register(
 );
 
 function IncomeExpenseLineGraph() {
-    const { incomes } = useGetIncomeFull();
-    const { expenses } = useGetExpensesFull();
-    const { transactions } = useGetTransactions();
+    const { incomes,getIncomesByDateRange } = useGetIncomeFull();
+    const { expenses ,getExpensesByDateRange} = useGetExpensesFull()
+    const [selectedDateRange, setSelectedDateRange] = useState("lastMonth");
     const [chartData, setChartData] = useState(getInitialChartData());
-
+    const {currency}=useGetCurrency();
     useEffect(() => {
         // Update chart data whenever transactions, incomes, or expenses change
         setChartData(getUpdatedChartData());
-    }, [transactions, incomes, expenses]);
+    }, [incomes, expenses,selectedDateRange]);
+
+    const handleDateRangeChange = (event) => {
+
+        setSelectedDateRange(event.target.value);
+        getExpensesByDateRange(event.target.value);
+        getIncomesByDateRange(event.target.value);
+      };
 
     function getInitialChartData() {
         return {
@@ -54,6 +62,7 @@ function IncomeExpenseLineGraph() {
     }
 
     function getUpdatedChartData() {
+        
         const dateAmountMap = {};
     
         // Aggregate income amounts by date
@@ -131,16 +140,28 @@ function IncomeExpenseLineGraph() {
                     color: 'rgba(0, 0, 0, 0.1)',
                 },
                 ticks: {
-                    callback: (value) => `$${value.toFixed(2)}`, // Format y-axis ticks as currency
+                    callback: (value) => `${currency} ${value.toFixed(2)}`, // Format y-axis ticks as currency
                 },
             },
         },
     };
 
     return (
+        <div>
+        <div className="text-gray-800">
+        <select value={selectedDateRange} onChange={handleDateRangeChange}>
+          <option value="lastMonth">Last Month</option>
+          <option value="lastTwoMonths">Last Two Months</option>
+          <option value="lastThreeMonths">Last Three Months</option>
+          <option value="lastSixMonths">Last Six Months</option>
+          <option value="lastYear">Last Year</option>
+        </select>
+      </div>
         <ChartStyled>
             <Line data={chartData} options={chartOptions} />
         </ChartStyled>
+
+        </div>
     );
 }
 

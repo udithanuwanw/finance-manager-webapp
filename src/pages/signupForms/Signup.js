@@ -1,8 +1,12 @@
 import Header from "../../components/signupForms/Header";
 import Signup from "../../components/signupForms/Signup";
 
+import { useState } from "react";
 export default function SignupPage(){
+
+  
     return(
+      <>
         <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
             <Header
@@ -11,9 +15,12 @@ export default function SignupPage(){
               linkName="Login"
               linkUrl="/"
             />
-            <Signup/>
+            <Signup />
             </div>
             </div>
+
+               
+        </>    
         
     )
 }

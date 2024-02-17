@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 
- {BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify}
+ {BsPersonCircle, BsJustify}
  from 'react-icons/bs'
 
 import UserAccountOverlay from './UserAccountOverlay'; 

@@ -3,65 +3,90 @@ import { useEffect, useState } from "react";
 import { query, collection, where, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
+import { subMonths } from 'date-fns';
 
 export const useGetExpenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
-
-  const expenseCollectionRef = collection(db, "transactions");
   const { userID } = useGetUserInfo();
 
-  useEffect(() => {
-    const getExpenses = async () => {
-      if (!userID) {
-        console.warn("userID is not available.");
-        return;
-      }
+  const expenseCollectionRef = collection(db, "transactions");
 
-      try {
-        const queryExpenses = query(
-          expenseCollectionRef,
-          where("userID", "==", userID),
-          where("transactionType", "==", "expense"),
-          orderBy("date")
-        );
+  const getExpensesByDateRange = async (dateRange) => {
+    let startDate, endDate;
 
-        const unsubscribe = onSnapshot(queryExpenses, (snapshot) => {
-          let expenseMap = new Map(); // Using Map to aggregate expenses by category name
-          let totalExpensesAmount = 0;
+    const currentDate = new Date();
 
-          snapshot.forEach((doc) => {
-            const data = doc.data();
-            const id = doc.id;
+    switch (dateRange) {
+      case "lastMonth":
+        startDate = subMonths(currentDate, 1);
+        endDate = currentDate;
+        break;
+      case "lastTwoMonths":
+        startDate = subMonths(currentDate, 2);
+        endDate = currentDate;
+        break;
+      case "lastThreeMonths":
+        startDate = subMonths(currentDate, 3);
+        endDate = currentDate;
+        break;
+      case "lastSixMonths":
+        startDate = subMonths(currentDate, 6);
+        endDate = currentDate;
+        break;
+      case "lastYear":
+        startDate = subMonths(currentDate, 12);
+        endDate = currentDate;
+        break;
+      default:
+        break;
+    }
 
-            // Accessing category name from the selectedCategory object
-            const categoryName = data.selectedCategory.name;
-            const amount = Number(data.transactionAmount);
-            totalExpensesAmount += amount;
+    try {
+      const queryExpenses = query(
+        expenseCollectionRef,
+        where("userID", "==", userID),
+        where("transactionType", "==", "expense"),
+        where("date", ">=", startDate),
+        where("date", "<=", endDate),
+        orderBy("date")
+      );
 
-            if (expenseMap.has(categoryName)) {
-              expenseMap.set(categoryName, expenseMap.get(categoryName) + amount);
-            } else {
-              expenseMap.set(categoryName, amount);
-            }
-          });
+      const unsubscribe = onSnapshot(queryExpenses, (snapshot) => {
+        let expenseMap = new Map();
+        let totalExpensesAmount = 0;
 
-          // Convert aggregated data into an array of objects
-          const expenseList = Array.from(expenseMap, ([name, amount]) => ({ name, amount }));
-          console.log(expenseList);
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const id = doc.id;
 
-          setExpenses(expenseList);
-          setTotalExpenses(totalExpensesAmount);
+          const categoryName = data.selectedCategory.name;
+          const amount = Number(data.transactionAmount);
+          totalExpensesAmount += amount;
+
+          if (expenseMap.has(categoryName)) {
+            expenseMap.set(categoryName, expenseMap.get(categoryName) + amount);
+          } else {
+            expenseMap.set(categoryName, amount);
+          }
         });
 
-        return () => unsubscribe();
-      } catch (err) {
-        console.error("Error fetching expenses:", err);
-      }
-    };
+        const expenseList = Array.from(expenseMap, ([name, amount]) => ({ name, amount }));
+        setExpenses(expenseList);
+        setTotalExpenses(totalExpensesAmount);
+      });
 
-    getExpenses();
+      return () => unsubscribe();
+    } catch (err) {
+      console.error("Error fetching expenses:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (userID) {
+      getExpensesByDateRange("lastMonth"); // Default to last month
+    }
   }, [userID]);
 
-  return { expenses, totalExpenses };
+  return { expenses, totalExpenses, getExpensesByDateRange };
 };
