@@ -28,11 +28,9 @@ const Dashboard = () => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data().currency.symbol);
           setCurrency(docSnap.data().currency.symbol);
         } else {
           // docSnap.data() will be undefined in this case
-          console.log("No such document!");
           setOverlayOpen(true);
         }
       } catch (error) {
@@ -99,7 +97,6 @@ const Dashboard = () => {
                 {transactions.map((transaction, index) => (
                   
                   <tr key={index} className="bg-white hover:bg-gray-100">
-                    {console.log(transaction)}
                     <td className="px-4 py-2 font-medium">{moment(transaction.date.toDate()).format('DD MMM')}</td>
                     <td className="px-4 py-2 flex items-center">
                       <FontAwesomeIcon icon={transaction.selectedCategory.icon} className="mr-2 text-gray-400" />

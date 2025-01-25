@@ -20,9 +20,7 @@ const TransactionForm = ({ onClose }) => {
     let transactionType;
 
     e.preventDefault();
-    console.log(selectedCategory.name);
-    
-    if(selectedCategory.name=='Income'){
+    if(selectedCategory.name==='Income'){
 
       transactionType="income";
 

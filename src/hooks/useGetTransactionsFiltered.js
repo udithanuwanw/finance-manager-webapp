@@ -84,7 +84,6 @@ export const useGetTransactionsFiltered = () => {
         where("userID", "==", userID),
         orderBy("date","desc")
       );
-      console.log(queryTransactions);
 
       unsubscribe = onSnapshot(queryTransactions, (snapshot) => {
         let docs = [];
@@ -103,7 +102,7 @@ export const useGetTransactionsFiltered = () => {
             totalIncome += Number(data.transactionAmount);
           }
 
-          console.log(totalExpenses, totalIncome);
+          
         });
 
         console.log(docs);

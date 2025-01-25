@@ -1,9 +1,6 @@
 // TransactionForm.js
 
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useNavigate, Navigate } from "react-router-dom";
 import { db } from '../config/firebase-config';
 import 'react-datepicker/dist/react-datepicker.css';
 import currencyToSymbolMap from 'currency-symbol-map/map';
@@ -16,11 +13,9 @@ const currencies = keyValuePairs.map(([code, symbol]) => {
 });
 
 const CurrencySelectPopup = ({setOverlayOpen}) => {
-    const navigate=useNavigate();
     const { userID } = useGetUserInfo();
 
     const [selectedCurrency, setSelectedCurrency] = useState('');
-    console.log(selectedCurrency)
   
 
 

@@ -10,7 +10,6 @@ import
 
 function Sidebar({openSidebarToggle, OpenSidebar}) {
     const currentPath = window.location.pathname;
-    console.log(currentPath);
   return (
     <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive": ""}>
         <div className='sidebar-title'>

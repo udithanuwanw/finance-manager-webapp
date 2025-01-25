@@ -22,15 +22,6 @@ const ChangePasswordPopup = ({ onClose }) => {
     setError("New passwords do not match");
     return;
     }
-    const credential = EmailAuthProvider.credential(
-        auth.currentUser.email,
-        currentPassword
-    )  
-
-      const result = await reauthenticateWithCredential(
-        auth.currentUser, 
-        credential
-    )  
 
       updatePassword(user, newPassword).then(() => {
                 console.log("Password updated successfully");

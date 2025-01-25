@@ -39,8 +39,6 @@ const authenticateUser = async () =>{
     let errorMessage = ""; // Declare the error message variable outside the blocks
 
     try {
-        console.log("Email:", loginState['email-address']);
-        console.log("Password:", loginState['password']);
         const userCredential = await signInWithEmailAndPassword(auth, loginState['email-address'], loginState['password']);
         const user = userCredential.user;
         const uid = user.uid;
@@ -66,7 +64,6 @@ const authenticateUser = async () =>{
         );
         navigate('/dashboard');
     } catch(error) {
-        console.log(error);
 
         if (error.code === "auth/wrong-password") {
             errorMessage = "Incorrect password. Please try again.";

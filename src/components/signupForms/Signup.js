@@ -4,7 +4,7 @@ import FormAction from "./FormAction";
 import Input from "./Input";
 import GoogleLoginButton from './SignInWithGoogle';
 import { useToast } from '../Toast/ToastService';
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { UserCheck} from 'react-feather'
 import { auth} from '../../config/firebase-config';
 import { createUserWithEmailAndPassword,updateProfile } from 'firebase/auth';
@@ -17,7 +17,6 @@ fields.forEach(field => fieldsState[field.id]='');
 export default function Signup(){
   const [signupState,setSignupState]=useState(fieldsState);
   const toast=useToast();
-  const navigate=useNavigate();
   const { isAuth } = useGetUserInfo();
 
 
@@ -45,8 +44,6 @@ export default function Signup(){
     let errorMessage = ""; // Declare the error message variable outside the blocks
 
     try {
-      console.log("Email:", signupState['email-address']);
-      console.log("Password:", signupState['password']);
 
       const userCredential = await createUserWithEmailAndPassword(auth, signupState['email-address'], signupState['password']);
       const user = userCredential.user;

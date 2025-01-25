@@ -28,7 +28,6 @@ const handleLogin = () => {
   const { isAuth } = useGetUserInfo();
     const signWithGoogle = async () => {
       const results=await signInWithPopup(auth,provider);
-      console.log(results);
       const authInfo={
         userID:results.user.uid,
         name:results.user.displayName,
