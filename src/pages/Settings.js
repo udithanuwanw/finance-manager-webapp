@@ -1,7 +1,6 @@
 import Layout from '../components/Layout';
 import React, { useState } from 'react';
 import ChangePasswordPopup from '../components/ChangePasswordPopup';
-import { getAuth} from "firebase/auth";
 import { useGetUserInfo } from '../hooks/useGetUserInfo';
 import CurrencySelectPopup from '../components/CurrencySelectPopup';
 
@@ -15,9 +14,6 @@ const Settings = () => {
   const {provider}=useGetUserInfo();
 
   
-  const openChangePassword = () => {
-    setShowPasswordModal(true);
-  };
 
   const closeChangePassword = () => {
     setShowPasswordModal(false);

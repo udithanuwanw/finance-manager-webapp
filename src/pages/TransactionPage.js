@@ -1,5 +1,5 @@
 import Layout from '../components/Layout';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TransactionList from '../components/Transactions/TransactionList';
 import TransactionForm from '../components/Transactions/TransactionForm';
 import "react-datepicker/dist/react-datepicker.css";

@@ -1,7 +1,6 @@
 import Header from "../../components/signupForms/Header";
 import Signup from "../../components/signupForms/Signup";
 
-import { useState } from "react";
 export default function SignupPage(){
 
   

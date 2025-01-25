@@ -6,7 +6,7 @@ import { useGetTransactions } from "../hooks/useGetTransactions";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const TransactionChart = () => {
-  const { transactions, transactionTotals } = useGetTransactions();
+  const {  transactionTotals } = useGetTransactions();
 
   const chartData = {
     labels: ["Income", "Expenses"],

@@ -4,13 +4,10 @@ import
  from 'react-icons/bs'
 
 import UserAccountOverlay from './UserAccountOverlay'; 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWallet, faArrowUp, faArrowDown ,faUser} from '@fortawesome/free-solid-svg-icons';
 import { useGetUserInfo } from '../hooks/useGetUserInfo';
 import { signOut } from "firebase/auth";
 
 import { useNavigate, Navigate } from "react-router-dom";
-import { Auth } from 'firebase/auth';
 import { auth } from '../config/firebase-config';
 
 function Header({OpenSidebar}) {
@@ -59,7 +56,7 @@ function Header({OpenSidebar}) {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [showUserOverlay]);
+  }, [showUserOverlay,name]);
 
   if (!isAuth) {
     return <Navigate to="/" />;

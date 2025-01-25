@@ -1,5 +1,5 @@
 import Layout from '../components/Layout';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useGetTransactions } from '../hooks/useGetTransactions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import { useGetCurrency } from '../hooks/useGetCurrency';
 const Reports = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const transactionsPerPage = 10;
-  const { transactions, transactionTotals } = useGetTransactions();
+  const { transactions } = useGetTransactions();
   const {currency}=useGetCurrency();
   const indexOfLastTransaction = currentPage * transactionsPerPage;
   const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;

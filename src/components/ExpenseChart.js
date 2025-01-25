@@ -4,7 +4,7 @@ import { Doughnut } from "react-chartjs-2";
 import { useGetExpenses } from "../hooks/useGetExpenses";
 
 const ExpenseChart = () => {
-  const { expenses, totalExpenses, getExpensesByDateRange } = useGetExpenses();
+  const { expenses, getExpensesByDateRange } = useGetExpenses();
   const [selectedDateRange, setSelectedDateRange] = useState("lastMonth");
 
   useEffect(() => {
